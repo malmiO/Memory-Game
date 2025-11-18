@@ -1,3 +1,3 @@
 ## Memory Game ##
 
-Live Link : https://memorygameon.netlify.app
+Live Link : https://malmio.github.io/Memory-Game
