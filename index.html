@@ -16,25 +16,81 @@
     min-height: 100vh;
     margin: 0;
     overflow: hidden;
+    color: #333;
+  }
+
+  /* Game Header */
+  #game-header {
+    display: none;
+    width: 100%;
+    max-width: 600px;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 15px;
+    padding: 15px;
+    margin-bottom: 20px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .stats-container {
+    display: flex;
+    gap: 20px;
+  }
+
+  .stat-box {
+    text-align: center;
+  }
+
+  .stat-value {
+    font-size: 24px;
+    font-weight: bold;
+    color: #ff5f6d;
+  }
+
+  .stat-label {
+    font-size: 12px;
+    color: #666;
+  }
+
+  #reset-button {
+    padding: 10px 20px;
+    font-size: 16px;
+    background: #ff5f6d;
+    background: linear-gradient(to right, #ff5f6d, #ffc371);
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    color: white;
+    font-weight: bold;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+
+  #reset-button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
   }
 
   /* Welcome Screen */
   #welcome-screen {
     text-align: center;
-    background: rgba(255,255,255,0.9);
+    background: rgba(255, 255, 255, 0.9);
     padding: 40px;
     border-radius: 20px;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
   }
 
   #welcome-screen h1 {
     color: #333;
     margin-bottom: 20px;
+    font-size: 2.5rem;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
   }
 
   #welcome-screen p {
     color: #555;
     margin: 5px 0;
+    font-size: 1.1rem;
   }
 
   #start-button {
@@ -53,7 +109,7 @@
 
   #start-button:hover {
     transform: scale(1.05);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
   }
 
   /* Game Container */
@@ -61,77 +117,266 @@
     display: none;
     grid-template-columns: repeat(4, 120px);
     grid-gap: 15px;
-    margin-top: 30px;
+    margin-top: 10px;
   }
 
   /* Cards */
   .card {
     width: 120px;
     height: 120px;
-    background-color: #444;
+    background: linear-gradient(145deg, #6a11cb, #2575fc);
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 50px;
-    color: #fff;
+    color: transparent;
     cursor: pointer;
     border-radius: 15px;
-    box-shadow: 0 6px 12px rgba(0,0,0,0.3);
-    transition: transform 0.3s, background-color 0.3s;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+    transition: transform 0.5s, background 0.5s, box-shadow 0.3s;
     position: relative;
-    perspective: 600px;
+    transform-style: preserve-3d;
+  }
+
+  .card::before {
+    content: "?";
+    position: absolute;
+    color: white;
+    font-size: 40px;
   }
 
   /* Card flip animation */
   .card.revealed {
-    background-color: #fff;
+    background: white;
     color: #333;
     transform: rotateY(180deg);
   }
 
-  /* Win Message */
-  #win-message {
+  .card.revealed::before {
     display: none;
-    font-size: 28px;
-    color: #ff4444;
-    margin-top: 30px;
-    text-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+  }
+
+  .card.matched {
+    background: linear-gradient(145deg, #56ab2f, #a8e063);
+    box-shadow: 0 0 20px rgba(168, 224, 99, 0.7);
+    transform: scale(1.05);
+  }
+
+  /* Win Score Card */
+  #win-score-card {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    z-index: 100;
+    width: 80%;
+    max-width: 500px;
+    animation: popIn 0.5s ease-out;
+  }
+
+  @keyframes popIn {
+    0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
+    100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+  }
+
+  #win-score-card h2 {
+    color: #ff5f6d;
+    margin-bottom: 20px;
+    font-size: 2rem;
+  }
+
+  .score-stats {
+    display: flex;
+    justify-content: space-around;
+    margin: 20px 0;
+  }
+
+  .score-stat {
+    text-align: center;
+  }
+
+  .score-value {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #2575fc;
+  }
+
+  .score-label {
+    font-size: 1rem;
+    color: #666;
+  }
+
+  .score-rating {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin: 20px 0;
+    padding: 10px;
+    border-radius: 10px;
+    background: linear-gradient(to right, #ff5f6d, #ffc371);
+    color: white;
+  }
+
+  #play-again-button {
+    margin-top: 20px;
+    padding: 12px 25px;
+    font-size: 18px;
+    background: #2575fc;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    color: white;
+    font-weight: bold;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+
+  #play-again-button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  }
+
+  /* Confetti effect */
+  .confetti {
+    position: fixed;
+    width: 10px;
+    height: 10px;
+    background-color: #f00;
+    top: -10px;
+    opacity: 0;
+    z-index: 99;
+  }
+
+  @keyframes confetti-fall {
+    0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: 600px) {
+    #game-container {
+      grid-template-columns: repeat(4, 80px);
+    }
+    
+    .card {
+      width: 80px;
+      height: 80px;
+      font-size: 30px;
+    }
+    
+    .card::before {
+      font-size: 25px;
+    }
+    
+    .stats-container {
+      gap: 10px;
+    }
+    
+    .stat-value {
+      font-size: 18px;
+    }
+    
+    .stat-label {
+      font-size: 10px;
+    }
   }
 </style>
 </head>
 <body>
 
+<div id="game-header">
+  <div class="stats-container">
+    <div class="stat-box">
+      <div class="stat-value" id="click-count">0</div>
+      <div class="stat-label">Clicks</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-value" id="timer">00:00</div>
+      <div class="stat-label">Time</div>
+    </div>
+  </div>
+  <button id="reset-button">Reset Game</button>
+</div>
+
 <div id="welcome-screen">
-  <h1>Welcome to Memory Game!</h1>
-  <p>Click on two cards to find a match.</p>
-  <p>If they match, they stay revealed.</p>
-  <p>Try to match all pairs in the fewest attempts!</p>
+  <h1>Memory Match Challenge</h1>
+  <p>Flip cards to find matching pairs.</p>
+  <p>Match all pairs in the fewest moves and fastest time!</p>
   <button id="start-button">Start Game</button>
 </div>
 
 <div id="game-container"></div>
-<div id="win-message"></div>
+
+<div id="win-score-card">
+  <h2>Congratulations!</h2>
+  <p>You've matched all pairs!</p>
+  <div class="score-stats">
+    <div class="score-stat">
+      <div class="score-value" id="final-time">00:00</div>
+      <div class="score-label">Time</div>
+    </div>
+    <div class="score-stat">
+      <div class="score-value" id="final-clicks">0</div>
+      <div class="score-label">Clicks</div>
+    </div>
+  </div>
+  <div class="score-rating" id="score-rating">Excellent!</div>
+  <button id="play-again-button">Play Again</button>
+</div>
 
 <script>
-const cardsArray = ['🍎', '🍎', '🍌', '🍌', '🍇', '🍇', '🍒', '🍒']; // Using emojis for fun
+const cardsArray = ['🍎', '🍎', '🍌', '🍌', '🍇', '🍇', '🍒', '🍒', '🍉', '🍉', '🍓', '🍓']; // More cards for better gameplay
 let cards = [];
 let revealed = [];
 let firstChoice = null;
 let secondChoice = null;
 let attempts = 0;
 let matchesFound = 0;
+let timerInterval;
+let seconds = 0;
+let gameStarted = false;
 const totalMatches = cardsArray.length / 2;
 
 const startButton = document.getElementById('start-button');
 const welcomeScreen = document.getElementById('welcome-screen');
+const gameHeader = document.getElementById('game-header');
 const gameContainer = document.getElementById('game-container');
-const winMessage = document.getElementById('win-message');
+const winScoreCard = document.getElementById('win-score-card');
+const clickCountElement = document.getElementById('click-count');
+const timerElement = document.getElementById('timer');
+const resetButton = document.getElementById('reset-button');
+const finalTimeElement = document.getElementById('final-time');
+const finalClicksElement = document.getElementById('final-clicks');
+const scoreRatingElement = document.getElementById('score-rating');
+const playAgainButton = document.getElementById('play-again-button');
 
-startButton.addEventListener('click', () => {
+startButton.addEventListener('click', startGame);
+resetButton.addEventListener('click', resetGame);
+playAgainButton.addEventListener('click', resetGame);
+
+function startGame() {
   welcomeScreen.style.display = 'none';
+  gameHeader.style.display = 'flex';
   gameContainer.style.display = 'grid';
   initGame();
-});
+  startTimer();
+  gameStarted = true;
+}
+
+function resetGame() {
+  clearInterval(timerInterval);
+  seconds = 0;
+  attempts = 0;
+  matchesFound = 0;
+  gameStarted = false;
+  updateStats();
+  winScoreCard.style.display = 'none';
+  startGame();
+}
 
 function initGame() {
   cards = shuffle([...cardsArray]);
@@ -148,6 +393,8 @@ function initGame() {
 }
 
 function onCardClick(e) {
+  if (!gameStarted) return;
+  
   const index = e.target.dataset.index;
   if (revealed[index] || secondChoice !== null) return;
 
@@ -158,6 +405,7 @@ function onCardClick(e) {
   } else {
     secondChoice = index;
     attempts++;
+    updateStats();
     setTimeout(checkMatch, 1000);
   }
 }
@@ -179,6 +427,9 @@ function hideCard(index) {
 function checkMatch() {
   if (cards[firstChoice] === cards[secondChoice]) {
     matchesFound++;
+    // Add matched class to both cards
+    gameContainer.children[firstChoice].classList.add('matched');
+    gameContainer.children[secondChoice].classList.add('matched');
   } else {
     hideCard(firstChoice);
     hideCard(secondChoice);
@@ -187,9 +438,78 @@ function checkMatch() {
   secondChoice = null;
 
   if (matchesFound === totalMatches) {
-    gameContainer.style.display = 'none';
-    winMessage.textContent = `🎉 You won in ${attempts} attempts! 🎉`;
-    winMessage.style.display = 'block';
+    endGame();
+  }
+}
+
+function startTimer() {
+  clearInterval(timerInterval);
+  seconds = 0;
+  updateTimer();
+  timerInterval = setInterval(updateTimer, 1000);
+}
+
+function updateTimer() {
+  seconds++;
+  const minutes = Math.floor(seconds / 60);
+  const remainingSeconds = seconds % 60;
+  timerElement.textContent = `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+}
+
+function updateStats() {
+  clickCountElement.textContent = attempts;
+}
+
+function endGame() {
+  clearInterval(timerInterval);
+  gameStarted = false;
+  
+  // Update final stats
+  finalTimeElement.textContent = timerElement.textContent;
+  finalClicksElement.textContent = attempts;
+  
+  // Calculate rating
+  let rating = "Good Job!";
+  const maxPossibleClicks = totalMatches * 2;
+  const efficiency = maxPossibleClicks / attempts;
+  
+  if (efficiency > 0.9 && seconds < 60) {
+    rating = "Outstanding!";
+  } else if (efficiency > 0.7 && seconds < 90) {
+    rating = "Excellent!";
+  } else if (efficiency > 0.5) {
+    rating = "Good Job!";
+  } else {
+    rating = "Keep Practicing!";
+  }
+  
+  scoreRatingElement.textContent = rating;
+  
+  // Show win score card after a short delay
+  setTimeout(() => {
+    winScoreCard.style.display = 'block';
+    createConfetti();
+  }, 1000);
+}
+
+function createConfetti() {
+  const colors = ['#ff5f6d', '#ffc371', '#2575fc', '#6a11cb', '#56ab2f', '#a8e063'];
+  const confettiCount = 150;
+  
+  for (let i = 0; i < confettiCount; i++) {
+    const confetti = document.createElement('div');
+    confetti.className = 'confetti';
+    confetti.style.left = Math.random() * 100 + 'vw';
+    confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+    confetti.style.width = Math.random() * 10 + 5 + 'px';
+    confetti.style.height = Math.random() * 10 + 5 + 'px';
+    confetti.style.animation = `confetti-fall ${Math.random() * 3 + 2}s linear forwards`;
+    document.body.appendChild(confetti);
+    
+    // Remove confetti after animation completes
+    setTimeout(() => {
+      confetti.remove();
+    }, 5000);
   }
 }
 
